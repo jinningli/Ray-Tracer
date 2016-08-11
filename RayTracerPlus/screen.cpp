@@ -183,7 +183,7 @@ namespace Tracer
 		{
 			for (int j = 0; j < w; j++)
 			{
-				data[i][j] = other.data[i][j];
+				data[i % other.h][j % other.w] = other.data[i % other.h][j % other.w];
 			}
 		}
 	}

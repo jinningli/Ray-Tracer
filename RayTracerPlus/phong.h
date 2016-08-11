@@ -6,7 +6,7 @@
 // global temp  
 namespace Tracer
 {
-	static GVector3 lightDir = GVector3(1, 1, 1).normalize();
+	static GVector3 lightDir = GVector3(3, 4, 1).normalize();
 	static Color lightColor = Color::white();
 
 	class PhongMaterial :public Material

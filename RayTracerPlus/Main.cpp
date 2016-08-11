@@ -21,6 +21,7 @@
 #include "checkmaterial.h"
 #include "phong.h"
 #include "scene.h"
+#include "pointlight.h"
 using namespace Tracer;
 
 
@@ -113,18 +114,20 @@ Color rayTraceRecursive(Scene* scene, CRay& ray, long maxReflect)
 
 void proprotrace(STBI_SCREEN& scr)
 {
-	Camera camera(GVector3(0, 10, 10), GVector3(0, -0.2, -1), GVector3(0, 1, 0), 90);
+	Camera camera(GVector3(0, 8, 10), GVector3(0, -0.06, -1), GVector3(0, 1, 0), 90);
 	Plane* plane1 = new Plane(GVector3(0, 1, 0), 1.0);
 	CSphere* sphere1 = new CSphere(GVector3(-4, 5, -10), 5.0);
-	CSphere* sphere2 = new CSphere(GVector3(7, 5, -10), 3.0);
+	CSphere* sphere2 = new CSphere(GVector3(7, 9, -10), 3.0);
+	CSphere* sphere3 = new CSphere(GVector3(8, 3, -10), 1);
 	plane1->material = new CheckerMaterial(0.8f, 0.5f);
 	sphere1->material = new PhongMaterial(Color::red(), Color::white(), 16, 0.25f);
-	sphere2->material = new PhongMaterial(Color::blue(), Color::white(), 16, 0.25f);
+	sphere2->material = new PhongMaterial(Color::skyblue(), Color::white(), 16, 0.25f);
+	sphere3->material = new PhongMaterial(Color::lgreen(), Color::white(), 16, 0.25f);
 	Scene dimension;
 	dimension.insert(plane1);
 	dimension.insert(sphere1);
 	dimension.insert(sphere2);
-
+	dimension.insert(sphere3);
 	long maxDepth = 20;
 	float dx = 1.0f / w;
 	float dy = 1.0f / h;
@@ -151,6 +154,51 @@ void proprotrace(STBI_SCREEN& scr)
 }
 
 
+void proproprotrace(STBI_SCREEN& scr)
+{
+	Camera camera(GVector3(0, 8, 10), GVector3(0, -0.06, -1), GVector3(0, 1, 0), 90);
+	Plane* plane1 = new Plane(GVector3(0, 1, 0), 1.0);
+	CSphere* sphere1 = new CSphere(GVector3(-6, 7, -10), 5.0);
+	CSphere* sphere2 = new CSphere(GVector3(7, 9, -10), 3.0);
+	CSphere* sphere3 = new CSphere(GVector3(3, 3, -3), 1);
+	plane1->material = new CheckerMaterial(0.8f, 0.5f);
+	sphere1->material = new PhongMaterial(Color::red(), Color::white(), 16, 0.25f);
+	sphere2->material = new PhongMaterial(Color::skyblue(), Color::white(), 16, 0.25f);
+	sphere3->material = new PhongMaterial(Color::lgreen(), Color::white(), 16, 0.25f);
+	PointLight light(Color::white().multiply(200), GVector3(10, 40, 30), true);
+	Scene dimension;
+	dimension.insert(plane1);
+	dimension.insert(sphere1);
+	dimension.insert(sphere2);
+	dimension.insert(sphere3);
+	long maxDepth = 20;
+	float dx = 1.0f / w;
+	float dy = 1.0f / h;
+	float dD = 255.0f / maxDepth;
+	for (long y = 0; y < h; ++y)
+	{
+		float sy = 1 - dy*y;
+		for (long x = 0; x < w; ++x)
+		{
+			float sx = dx*x;
+			CRay ray(camera.generateRay(sx, sy));
+			//IntersectResult result = sphere1.isIntersected(ray);
+			IntersectResult result = dimension.isIntersected(ray);
+			if (result.material)
+			{
+				Color color = light.intersect(dimension, result);
+				//Color color = sphere1.material->sample(ray, result.position, result.normal);
+				if(!(color == Color::black()))
+				color = rayTraceRecursive(&dimension, ray, 5);
+
+				color.saturate();
+				//color.show(); 
+				scr.STBI_SCREEN_SET_PIX(y, x, color.r * 255, color.g * 255, color.b * 255);
+			}
+		}
+	}
+}
+
 int main()
 {	
 	freopen("variable.txt", "r", stdin);
@@ -162,14 +210,13 @@ int main()
 	STBI_SCREEN init;
 	init.STBI_SCREEN_SET_FROM_BUFFER(_w, _h, _comp, input_image);
 	//stbi_write_png("testout0.png", b1w, b1h, comp1, b1, 0);
-
 	STBI_SCREEN scr(w, h, comp);
 	scr.STBI_SCREEN_COPY_BG(init);
 	unsigned char* output_image;
 	output_image = new unsigned char[w * h * comp];
 	//simpletrace(scr);
 	//protrace(scr);
-	proprotrace(scr);
+	proproprotrace(scr);
 	//scr.STBI_SCREEN_SHOW(1);
 	scr.STBI_SCREEN_OUTPUT(output_image);
 	stbi_write_png("testout.png", w, h, comp, output_image, 0);

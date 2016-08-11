@@ -14,9 +14,17 @@ namespace Tracer
 	{
 		r = _r;g = _g;b = _b;
 	}
+	bool Color::operator== (const Color& other)
+	{
+		return r == other.r && g == other.g && b == other.b;
+	}
 	Color Color::add(const Color& c)
 	{
 		return Color(r + c.r, g + c.g, b + c.b);
+	}
+	Color Color::divide(float f)
+	{
+		return Color(r / f, g / f, b / f);
 	}
 	Color Color::multiply(float s) const
 	{
@@ -32,8 +40,12 @@ namespace Tracer
 		g = g > 1.0 ? 1.0 : g;
 		b = b > 1.0 ? 1.0 : b;
 	}
-	void Color::show()
+	Color Color::normalize()
 	{
-		std::cout << "r:" << r << "g:" << g << "b:" << b << std::endl;
+		float k = sqrt(r * r + g * g + b * b);
+		r /= k;
+		g /= k;
+		b /= k;
+		return *this;
 	}
 }
