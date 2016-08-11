@@ -2,20 +2,12 @@
 
 namespace Tracer
 {
-	PhongMaterial::PhongMaterial()
-	{
-		//ctor  
-	}
 	PhongMaterial::PhongMaterial(const Color& _diffuse, const Color& _specular, const float& _shininess, float _reflectiveness)
 	{
 		diffuse = _diffuse;
 		specular = _specular;
 		shininess = _shininess;
 		reflectiveness = _reflectiveness;
-	}
-	PhongMaterial::~PhongMaterial()
-	{
-		//dtor  
 	}
 	Color PhongMaterial::sample(const CRay& ray, const GVector3& position, const GVector3& normal)
 	{

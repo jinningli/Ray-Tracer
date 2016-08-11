@@ -23,10 +23,6 @@
 #include "scene.h"
 using namespace Tracer;
 
-Vec3f spotpos;
-Vec3f screen_origin;
-Vec3f screen_dir1;
-Vec3f screen_dir2;
 
 int w;
 int h;
@@ -37,7 +33,7 @@ void simpletrace(STBI_SCREEN & scr)
 {
 	float horiz = 0.0;
 	float dep = 10;
-	perspectiveCamera camera(GVector3(horiz, 10, dep), GVector3(0, 0, -1), GVector3(0, 1, 0), 90);
+	Camera camera(GVector3(horiz, 10, dep), GVector3(0, 0, -1), GVector3(0, 1, 0), 90);
 	long maxDepth = 18;
 	CSphere* sphere1 = new CSphere(GVector3(0, 10, -10), 10.0);
 	float dx = 1.0f / w;
@@ -64,7 +60,7 @@ void simpletrace(STBI_SCREEN & scr)
 
 void protrace(STBI_SCREEN& scr)
 {
-	perspectiveCamera camera(GVector3(0, 10, 10), GVector3(0, -0.5, -1), GVector3(1, 0, 0), 90);
+	Camera camera(GVector3(0, 10, 10), GVector3(0, -0.5, -1), GVector3(1, 0, 0), 90);
 	Plane plane1(GVector3(0, 1, 0), 1.0);
 	CSphere sphere1(GVector3(0, 5, -10), 5.0);
 	plane1.material = new CheckerMaterial(0.1f);
@@ -117,11 +113,11 @@ Color rayTraceRecursive(Scene* scene, CRay& ray, long maxReflect)
 
 void proprotrace(STBI_SCREEN& scr)
 {
-	perspectiveCamera camera(GVector3(0, 10, 10), GVector3(0, -0.2, -1), GVector3(0, 1, 0), 90);
+	Camera camera(GVector3(0, 10, 10), GVector3(0, -0.2, -1), GVector3(0, 1, 0), 90);
 	Plane* plane1 = new Plane(GVector3(0, 1, 0), 1.0);
-	CSphere* sphere1 = new CSphere(GVector3(-2, 5, -10), 5.0);
-	CSphere* sphere2 = new CSphere(GVector3(5, 5, -10), 3.0);
-	plane1->material = new CheckerMaterial(0.1f, 0.5f);
+	CSphere* sphere1 = new CSphere(GVector3(-4, 5, -10), 5.0);
+	CSphere* sphere2 = new CSphere(GVector3(7, 5, -10), 3.0);
+	plane1->material = new CheckerMaterial(0.8f, 0.5f);
 	sphere1->material = new PhongMaterial(Color::red(), Color::white(), 16, 0.25f);
 	sphere2->material = new PhongMaterial(Color::blue(), Color::white(), 16, 0.25f);
 	Scene dimension;
@@ -148,25 +144,34 @@ void proprotrace(STBI_SCREEN& scr)
 				Color color = rayTraceRecursive(&dimension, ray, 5);
 				color.saturate();
 				//color.show(); 
-				scr.STBI_SCREEN_SET_PIX(x, y, color.r * 255, color.g * 255, color.b * 255);
+				scr.STBI_SCREEN_SET_PIX(y, x, color.r * 255, color.g * 255, color.b * 255);
 			}
 		}
 	}
 }
+
+
 int main()
 {	
 	freopen("variable.txt", "r", stdin);
-	printf("please set w & h:\n");
 	scanf("%d%d%d", &w, &h, &comp);
+	int _w = 0;
+	int _h = 0;
+	int _comp = 0;
+	unsigned char* input_image = stbi_load("background1.png", &_w, &_h, &_comp, 0);
+	STBI_SCREEN init;
+	init.STBI_SCREEN_SET_FROM_BUFFER(_w, _h, _comp, input_image);
+	//stbi_write_png("testout0.png", b1w, b1h, comp1, b1, 0);
+
 	STBI_SCREEN scr(w, h, comp);
-	scr.STBI_SCREEN_SET_POS(screen_origin, screen_dir1, screen_dir2);
-	unsigned char* image;
-	image = new unsigned char[w * h * comp];
+	scr.STBI_SCREEN_COPY_BG(init);
+	unsigned char* output_image;
+	output_image = new unsigned char[w * h * comp];
 	//simpletrace(scr);
 	//protrace(scr);
 	proprotrace(scr);
 	//scr.STBI_SCREEN_SHOW(1);
-	scr.STBI_SCREEN_OUTPUT(image);
-	stbi_write_png("testout.png", w, h, comp, image, 0);
+	scr.STBI_SCREEN_OUTPUT(output_image);
+	stbi_write_png("testout.png", w, h, comp, output_image, 0);
 	return 0;
 }

@@ -12,10 +12,8 @@ namespace Tracer
 	class PhongMaterial :public Material
 	{
 	public:
-		PhongMaterial();
 		PhongMaterial(const Color& _diffuse, const Color& _specular, const float& _shininess, float _reflectiveness = 0);
-		virtual Color sample(const CRay& ray, const GVector3& position, const GVector3& normal);
-		virtual ~PhongMaterial();
+		Color sample(const CRay& ray, const GVector3& position, const GVector3& normal);
 	protected:
 	private:
 		Color   diffuse;

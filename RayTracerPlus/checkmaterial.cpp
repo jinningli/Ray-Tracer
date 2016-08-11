@@ -2,18 +2,10 @@
 
 namespace Tracer
 {
-	CheckerMaterial::CheckerMaterial()
-	{
-		//ctor  
-	}
 	CheckerMaterial::CheckerMaterial(float _scale, float _reflectiveness)
 	{
 		scale = _scale;
 		reflectiveness = _reflectiveness;
-	}
-	CheckerMaterial::~CheckerMaterial()
-	{
-		//dtor  
 	}
 	Color CheckerMaterial::sample(const CRay& ray, const GVector3& position, const GVector3& normal)
 	{

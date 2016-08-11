@@ -2,14 +2,7 @@
 
 namespace Tracer
 {
-	perspectiveCamera::perspectiveCamera()
-	{
-
-	}
-	perspectiveCamera::~perspectiveCamera()
-	{
-	}
-	perspectiveCamera::perspectiveCamera(const GVector3& _eye, const GVector3& _front, const GVector3& _refUp, float _fov)
+	Camera::Camera(const GVector3& _eye, const GVector3& _front, const GVector3& _refUp, float _fov)
 	{
 		eye = _eye;
 		front = _front;
@@ -19,7 +12,7 @@ namespace Tracer
 		up = right.crossMul(front);
 		fovScale = tan(fov* (PI  * 0.5f / 180)) * 2;
 	}
-	CRay perspectiveCamera::generateRay(float x, float y)
+	CRay Camera::generateRay(float x, float y)
 	{
 		GVector3 r = right*((x - 0.5f) * fovScale);
 		GVector3 u = up*((y - 0.5f) * fovScale);

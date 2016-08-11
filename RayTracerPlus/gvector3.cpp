@@ -31,10 +31,6 @@ namespace Tracer
 	{
 		return GVector3(x / n, y / n, z / n);
 	}
-	void GVector3::getInfo()
-	{
-		std::cout << "x:" << x << " y:" << y << " z:" << z << std::endl;
-	}
 	GVector3 GVector3::abs()
 	{
 		if (x < 0) x *= -1;
@@ -66,10 +62,6 @@ namespace Tracer
 		y = y / length;
 		z = z / length;
 		return GVector3(x, y, z);
-	}
-	void GVector3::show()
-	{
-		std::cout << "x:" << x << "  y:" << y << "  z" << z << std::endl;
 	}
 	float GVector3::max()
 	{

@@ -60,6 +60,7 @@ namespace Tracer
 		SCR_VOI STBI_SCREEN_SET_LINE(SCR_INT _line, SCR_INT Left_Bound, SCR_INT Right_Bound, const STBI_PIX& _pix);
 		SCR_VOI	STBI_SCREEN_SET_COL(SCR_INT _col, SCR_INT Up_Bound, SCR_INT Down_Bound, const STBI_PIX& _pix);
 		SCR_VOI STBI_SCREEN_SET_POS(Vec3f& _origin, Vec3f& _dir1, Vec3f& _dir2);
+		SCR_VOI STBI_SCREEN_COPY_BG(const STBI_SCREEN& other);
 		//Set Function
 		//-----------------
 

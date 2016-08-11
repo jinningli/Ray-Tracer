@@ -177,7 +177,16 @@ namespace Tracer
 			}
 		}
 	}
-
+	SCR_VOI STBI_SCREEN::STBI_SCREEN_COPY_BG(const STBI_SCREEN& other)
+	{
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				data[i][j] = other.data[i][j];
+			}
+		}
+	}
 	SCR_VOI STBI_SCREEN::STBI_SCREEN_SHOW(SCR_INT index)
 	{
 		char Fill[] = { '@', '#', '*', '0', '+', '.' };

@@ -2,11 +2,9 @@
 #include "ray.h"  
 namespace Tracer
 {
-	class perspectiveCamera {
+	class Camera {
 	public:
-		perspectiveCamera();
-		~perspectiveCamera();
-		perspectiveCamera(const GVector3& _eye, const GVector3& _front, const GVector3& _refUp, float _fov);
+		Camera(const GVector3& _eye, const GVector3& _front, const GVector3& _refUp, float _fov);
 		CRay generateRay(float x, float y);
 
 	private:
